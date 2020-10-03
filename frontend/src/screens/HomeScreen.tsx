@@ -1,11 +1,20 @@
-import React from 'react'
-import { Row, Col } from 'react-bootstrap'
-import { Product } from '../components/Product'
-import products from '../products'
+import React, { useEffect, useState } from 'react';
+import { Row, Col } from 'react-bootstrap';
+import { Product, ProductProps, ProductType } from '../components/Product';
+import axios from 'axios';
 
 interface HomeScreenProps {}
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({}) => {
+  const [products, setProducts] = useState<ProductType[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data } = await axios.get('/api/products');
+      setProducts(data);
+    };
+    fetchProducts();
+  }, []);
   return (
     <>
       <Row>
@@ -16,5 +25,5 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({}) => {
         ))}
       </Row>
     </>
-  )
-}
+  );
+};

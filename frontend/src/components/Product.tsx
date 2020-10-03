@@ -1,21 +1,22 @@
-import React from 'react'
-import { Card } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import { Rating } from './Rating'
+import React from 'react';
+import { Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Rating } from './Rating';
 
+export interface ProductType {
+  _id: string;
+  name: string;
+  image: string;
+  description: string;
+  brand: string;
+  category: string;
+  price: number;
+  countInStock: number;
+  rating: number;
+  numReviews: number;
+}
 export interface ProductProps {
-  product: {
-    _id: string
-    name: string
-    image: string
-    description: string
-    brand: string
-    category: string
-    price: number
-    countInStock: number
-    rating: number
-    numReviews: number
-  }
+  product: ProductType;
 }
 
 export const Product: React.FC<ProductProps> = ({
@@ -42,9 +43,9 @@ export const Product: React.FC<ProductProps> = ({
         </Card.Text>
       </Card.Body>
     </Card>
-  )
-}
+  );
+};
 
 Rating.defaultProps = {
   color: '#f8e825'
-}
+};
