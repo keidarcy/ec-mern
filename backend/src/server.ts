@@ -1,28 +1,19 @@
 import express from 'express';
-import products from './data/products';
 import 'colors';
 import dotenv from 'dotenv';
+import productRoutes from './routes/productRoutes';
 import connectDB from './config/db';
+import { errorHandler, notFound } from './middlewares/errorMiddleware';
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-app.get('/', (req, res) => {
-  // console.log(req);
-  res.send('RUNININIGNGI');
-});
+app.use('/api/products', productRoutes);
 
-app.get('/api/products', (req, res) => {
-  // console.log(req);
-  res.json(products);
-});
-
-app.get('/api/products/:id', (req, res) => {
-  const product = products.find((p) => p._id === req.params.id);
-  res.json(product);
-});
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
