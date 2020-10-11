@@ -1,10 +1,10 @@
-import React from 'react'
-import { Container } from 'react-bootstrap'
-import { Header } from './components/Header'
-import { Footer } from './components/Footer'
-import { HomeScreen } from './screens/HomeScreen'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { ProductScreen } from './screens/ProductScreen'
+import React from 'react';
+import { Container } from 'react-bootstrap';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
+import { HomeScreen } from './screens/HomeScreen';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { ProductScreen } from './screens/ProductScreen';
 
 const App = () => {
   return (
@@ -18,7 +18,7 @@ const App = () => {
       </main>
       <Footer />
     </Router>
-  )
-}
+  );
+};
 
-export default App
+export default App;

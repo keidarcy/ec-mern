@@ -7,7 +7,6 @@ import { RootStore } from '../store';
 import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
 
-
 export const HomeScreen: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -21,20 +20,20 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <>
-        <h1>YOUR LOVE</h1>
-        {loading ? (
-          <Loader />
-        ): error ? (
-          <Message variant="danger">{error}</Message>
-        ): (
-          <Row>
-            {products.map((product) => (
-              <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-                <Product product={product} />
-              </Col>
-            ))}
-          </Row>
-        )}
+      <h1>YOUR LOVE</h1>
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : (
+        <Row>
+          {products.map((product) => (
+            <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+              <Product product={product} />
+            </Col>
+          ))}
+        </Row>
+      )}
     </>
   );
 };
