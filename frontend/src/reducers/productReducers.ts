@@ -8,10 +8,7 @@ export type ProductActionTypes =
 
 export type ProductDetailsActionTypes =
   | { type: PRODUCT_ACTIONS.PRODUCT_DETAILS_REQUEST }
-  | {
-      type: PRODUCT_ACTIONS.PRODUCT_DETAILS_SUCCESS;
-      payload: ProductType;
-    }
+  | { type: PRODUCT_ACTIONS.PRODUCT_DETAILS_SUCCESS; payload: ProductType }
   | { type: PRODUCT_ACTIONS.PRODUCT_DETAILS_FAIL; payload: Error };
 
 export interface ProductListStateType {
@@ -45,13 +42,27 @@ export interface ReviewType {
   comment: string;
 }
 
+export const ProductInitialState = {
+  _id: '',
+  name: '',
+  image: '',
+  description: '',
+  brand: '',
+  category: '',
+  price: 0,
+  countInStock: 0,
+  rating: 0,
+  numReviews: 0
+};
+
 export const productDetailsInitialState = {
-  loading: false
+  loading: false,
+  product: ProductInitialState
 };
 
 export interface ProductDetailsStateType {
   loading: boolean;
-  product?: ProductType;
+  product: ProductType;
   error?: Error;
 }
 

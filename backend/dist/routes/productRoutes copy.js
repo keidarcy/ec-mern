@@ -9,4 +9,4 @@ const router = express_1.default.Router();
 router.route('/').get(productController_1.getProducts);
 router.route('/:id').get(productController_1.getProductById);
 exports.default = router;
-//# sourceMappingURL=productRoutes.js.map
+//# sourceMappingURL=productRoutes copy.js.map
