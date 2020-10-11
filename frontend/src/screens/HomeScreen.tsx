@@ -15,7 +15,7 @@ export const HomeScreen: React.FC = () => {
   );
 
   useEffect(() => {
-    dispatch(listProducts);
+    dispatch(listProducts());
   }, [dispatch]);
 
   return (
