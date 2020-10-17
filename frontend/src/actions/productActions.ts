@@ -3,8 +3,7 @@ import axios from 'axios';
 import { Dispatch } from 'redux';
 import {
   ProductActionTypes,
-  ProductDetailsActionTypes,
-  ReviewType
+  ProductDetailsActionTypes
 } from '../reducers/productReducers';
 import { ProductType } from '../components/Product';
 

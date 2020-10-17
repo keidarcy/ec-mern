@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerUser = exports.getUserProfile = exports.authUser = void 0;
+exports.updateUserProfile = exports.registerUser = exports.getUserProfile = exports.authUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const generateToken_1 = require("../utils/generateToken");
@@ -51,6 +51,29 @@ const getUserProfile = express_async_handler_1.default((req, res) => __awaiter(v
     }
 }));
 exports.getUserProfile = getUserProfile;
+const updateUserProfile = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findById(req.user._id);
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+        const updatedUser = yield user.save();
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
+            token: generateToken_1.generateToken(updatedUser._id)
+        });
+    }
+    else {
+        res.status(404);
+        throw new Error('USER not found');
+    }
+}));
+exports.updateUserProfile = updateUserProfile;
 const registerUser = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
     const userExists = yield userModel_1.default.findOne({ email });

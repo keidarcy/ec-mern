@@ -17,7 +17,6 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const protect = express_async_handler_1.default((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.headers);
     let token;
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {

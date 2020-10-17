@@ -9,6 +9,7 @@ const authMiddleware_1 = require("../middlewares/authMiddleware");
 const router = express_1.default.Router();
 router.route('/login').post(userController_1.authUser);
 router.route('/profile').get(authMiddleware_1.protect, userController_1.getUserProfile);
+router.route('/profile').put(authMiddleware_1.protect, userController_1.updateUserProfile);
 router.route('/register').post(userController_1.registerUser);
 exports.default = router;
 //# sourceMappingURL=userRoutes.js.map
