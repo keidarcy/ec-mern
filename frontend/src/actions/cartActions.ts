@@ -2,7 +2,7 @@ import { ProductType } from '../components/Product';
 import { CART_ACTIONS } from '../types';
 import axios from 'axios';
 import { Dispatch } from 'react';
-import { CartActionTypes } from '../reducers/cartReducers';
+import { CartActionTypes, ShippingStateTypes } from '../reducers/cartReducers';
 import store from '../store';
 
 export const addToCart = (id: string, qty: number) => async (
@@ -36,4 +36,15 @@ export const removeFromCart = (id: string) => (
   });
 
   localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems));
+};
+
+export const saveShippingAddress = (data: ShippingStateTypes) => (
+  dispatch: Dispatch<CartActionTypes>
+) => {
+  dispatch({
+    type: CART_ACTIONS.CART_SAVE_SHIPPING_ADDRESS,
+    payload: data
+  });
+
+  localStorage.setItem('shippingAddress', JSON.stringify(data));
 };
