@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStore } from '../store';
 import { FormContainer } from '../components/FormContainer';
-import { shippingInitialState } from '../reducers/cartReducers';
 import { saveShippingAddress } from '../actions/cartActions';
+import { CheckoutSteps } from '../components/CheckoutSteps';
+import { useHistory } from 'react-router-dom';
 
 export const ShippingScreen: React.FC = ({}) => {
   const { shippingAddress } = useSelector((state: RootStore) => state.cart);
   const [state, setState] = useState(shippingAddress);
-  const location = useLocation();
   const history = useHistory();
   const dispatch = useDispatch();
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     dispatch(saveShippingAddress(state));
+    history.push('/payment');
   };
 
   return (
     <FormContainer>
+      <CheckoutSteps step1 step2 />
       <h1>Shipping</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="address">

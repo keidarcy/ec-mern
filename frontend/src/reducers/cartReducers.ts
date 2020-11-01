@@ -12,9 +12,11 @@ export type ShippingStateTypes = typeof shippingInitialState;
 export type CartActionTypes =
   | { type: CART_ACTIONS.CART_ADD_ITEM; payload: typeof cartInitialState.cartItems[0] }
   | { type: CART_ACTIONS.CART_REMOVE_ITEM; payload: string }
-  | { type: CART_ACTIONS.CART_SAVE_SHIPPING_ADDRESS; payload: ShippingStateTypes };
+  | { type: CART_ACTIONS.CART_SAVE_SHIPPING_ADDRESS; payload: ShippingStateTypes }
+  | { type: CART_ACTIONS.CART_SAVE_PAYMENT_METHOD; payload: string };
 
 const cartInitialState = {
+  paymentMethod: '',
   cartItems: [
     {
       product: '',
@@ -27,10 +29,14 @@ const cartInitialState = {
   ]
 };
 
+const cartState = { ...cartInitialState, shippingAddress: shippingInitialState };
+
+type cartReducerTypes = typeof cartState;
+
 export const cartReducer = (
-  state = { ...cartInitialState, shippingAddress: shippingInitialState },
+  state = cartState,
   action: CartActionTypes
-) => {
+): cartReducerTypes => {
   switch (action.type) {
     case CART_ACTIONS.CART_ADD_ITEM:
       const item = action.payload;
@@ -56,6 +62,11 @@ export const cartReducer = (
       return {
         ...state,
         shippingAddress: action.payload
+      };
+    case CART_ACTIONS.CART_SAVE_PAYMENT_METHOD:
+      return {
+        ...state,
+        paymentMethod: action.payload
       };
 
     default:
