@@ -20,19 +20,20 @@ export const orderPayload = {
   totalPrice: 0
 };
 
-export type OrderType = typeof orderPayload & { _id?: string };
-
-interface OrderInitialType {
+export interface OrderInitialType {
   loading?: boolean;
-  order?: OrderType;
+  order?: typeof orderPayload & { _id?: string };
   error?: Error;
   success?: boolean;
 }
 
 export type OrderActionTypes =
   | { type: Order_Actions.ORDER_CREATE_REQUEST }
-  | { type: Order_Actions.ORDER_CREATE_SUCESS; payload: OrderType }
-  | { type: Order_Actions.ORDER_CREATE_FAIL; payload: Error };
+  | { type: Order_Actions.ORDER_CREATE_SUCESS; payload: typeof orderPayload }
+  | { type: Order_Actions.ORDER_CREATE_FAIL; payload: Error }
+  | { type: Order_Actions.ORDER_DETAIL_REQUEST }
+  | { type: Order_Actions.ORDER_DETAIL_SUCESS; payload: typeof orderPayload }
+  | { type: Order_Actions.ORDER_DETAIL_FAIL; payload: Error };
 
 export const orderCreateReducer = (
   state: OrderInitialType = { order: orderPayload },
@@ -40,11 +41,27 @@ export const orderCreateReducer = (
 ): OrderInitialType => {
   switch (action.type) {
     case Order_Actions.ORDER_CREATE_REQUEST:
-      return { loading: true };
+      return { ...state, loading: true };
     case Order_Actions.ORDER_CREATE_SUCESS:
-      return { loading: false, order: action.payload, success: true };
+      return { ...state, loading: false, order: action.payload, success: true };
     case Order_Actions.ORDER_CREATE_FAIL:
-      return { loading: false, error: action.payload };
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const orderDetailReducer = (
+  state: OrderInitialType = { order: orderPayload },
+  action: OrderActionTypes
+): OrderInitialType => {
+  switch (action.type) {
+    case Order_Actions.ORDER_DETAIL_REQUEST:
+      return { ...state, loading: true };
+    case Order_Actions.ORDER_DETAIL_SUCESS:
+      return { ...state, loading: false, order: action.payload };
+    case Order_Actions.ORDER_DETAIL_FAIL:
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }

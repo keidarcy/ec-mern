@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addOrderItems = void 0;
+exports.getOrderById = exports.addOrderItems = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const orderModel_1 = __importDefault(require("../models/orderModel"));
 const addOrderItems = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,4 +37,15 @@ const addOrderItems = express_async_handler_1.default((req, res) => __awaiter(vo
     }
 }));
 exports.addOrderItems = addOrderItems;
+const getOrderById = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const order = yield orderModel_1.default.findById(req.params.id).populate('user', 'name email');
+    if (order) {
+        res.json(order);
+    }
+    else {
+        res.status(404);
+        throw new Error('Order not Found');
+    }
+}));
+exports.getOrderById = getOrderById;
 //# sourceMappingURL=orderController.js.map
