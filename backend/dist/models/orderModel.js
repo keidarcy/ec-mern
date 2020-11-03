@@ -26,7 +26,7 @@ const OrderSchema = new mongoose_1.Schema({
         required: true,
         ref: 'User'
     },
-    orderItem: [
+    orderItems: [
         {
             name: { type: String, require: true },
             qty: { type: Number, require: true },
@@ -57,6 +57,11 @@ const OrderSchema = new mongoose_1.Schema({
         default: 0.0
     },
     shippingPrice: {
+        type: Number,
+        required: true,
+        default: 0.0
+    },
+    itemsPrice: {
         type: Number,
         required: true,
         default: 0.0

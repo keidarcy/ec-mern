@@ -6,9 +6,10 @@ import {
   UserRegisterActionTypes,
   UserUpdateProfileActionTypes
 } from '../reducers/userReducers';
-import { USER_ACTIONS } from '../types';
+import { Order_Actions, USER_ACTIONS } from '../types';
 import store from '../store';
 import axios, { AxiosResponse } from 'axios';
+import { OrderActionTypes } from '../reducers/orderReducers';
 
 export const login = (email: string, password: string) => async (
   dispatch: Dispatch<UserLoginActionTypes>
@@ -48,9 +49,13 @@ export const login = (email: string, password: string) => async (
   }
 };
 
-export const logout = () => (dispatch: Dispatch<UserLoginActionTypes>) => {
+export const logout = () => (
+  dispatch: Dispatch<UserLoginActionTypes | UserDetailsActionTypes | OrderActionTypes>
+) => {
   localStorage.removeItem('userInfo');
   dispatch({ type: USER_ACTIONS.USER_LOGOUT });
+  dispatch({ type: USER_ACTIONS.USER_DETAILS_RESET });
+  dispatch({ type: Order_Actions.ORDER_LIST_MY_RESET });
 };
 
 export const register = (name: string, email: string, password: string) => async (

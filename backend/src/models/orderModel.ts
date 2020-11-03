@@ -7,7 +7,7 @@ const OrderSchema: Schema = new Schema(
       required: true,
       ref: 'User'
     },
-    orderItem: [
+    orderItems: [
       {
         name: { type: String, require: true },
         qty: { type: Number, require: true },
@@ -38,6 +38,11 @@ const OrderSchema: Schema = new Schema(
       default: 0.0
     },
     shippingPrice: {
+      type: Number,
+      required: true,
+      default: 0.0
+    },
+    itemsPrice: {
       type: Number,
       required: true,
       default: 0.0

@@ -21,6 +21,7 @@ export type UserRegisterActionTypes =
 
 export type UserDetailsActionTypes =
   | { type: USER_ACTIONS.USER_DETAILS_REQUEST }
+  | { type: USER_ACTIONS.USER_DETAILS_RESET }
   | { type: USER_ACTIONS.USER_DETAILS_SUCCESS; payload: UserPayload }
   | { type: USER_ACTIONS.USER_DETAILS_FAIL; payload: Error };
 
@@ -79,6 +80,8 @@ export const userDetailsReducer = (
   switch (action.type) {
     case USER_ACTIONS.USER_DETAILS_REQUEST:
       return { ...state, loading: true };
+    case USER_ACTIONS.USER_DETAILS_RESET:
+      return {};
     case USER_ACTIONS.USER_DETAILS_SUCCESS:
       return { loading: false, user: action.payload };
     case USER_ACTIONS.USER_DETAILS_FAIL:

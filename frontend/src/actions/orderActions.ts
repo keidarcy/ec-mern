@@ -29,7 +29,7 @@ export const createOrder = (order: typeof orderPayload) => async (
       config
     );
     dispatch({
-      type: Order_Actions.ORDER_CREATE_SUCESS,
+      type: Order_Actions.ORDER_CREATE_SUCCESS,
       payload: data
     });
   } catch (error) {
@@ -42,6 +42,7 @@ export const createOrder = (order: typeof orderPayload) => async (
     });
   }
 };
+
 export const getOrderDetails = (id: string) => async (
   dispatch: Dispatch<OrderActionTypes>,
   getState: typeof store.getState
@@ -66,12 +67,89 @@ export const getOrderDetails = (id: string) => async (
       config
     );
     dispatch({
-      type: Order_Actions.ORDER_DETAIL_SUCESS,
+      type: Order_Actions.ORDER_DETAIL_SUCCESS,
       payload: data
     });
   } catch (error) {
     dispatch({
       type: Order_Actions.ORDER_DETAIL_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
+export const payOrder = (orderId: string, paymentResult: {}) => async (
+  dispatch: Dispatch<OrderActionTypes>,
+  getState: typeof store.getState
+) => {
+  try {
+    dispatch({
+      type: Order_Actions.ORDER_PAY_REQUEST
+    });
+    const {
+      userLogin: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo?.token}`
+      }
+    };
+
+    const { data } = await axios.put<any, AxiosResponse>(
+      `/api/orders/${orderId}/pay`,
+      paymentResult,
+      config
+    );
+    dispatch({
+      type: Order_Actions.ORDER_PAY_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: Order_Actions.ORDER_PAY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
+export const listMyOrders = () => async (
+  dispatch: Dispatch<OrderActionTypes>,
+  getState: typeof store.getState
+) => {
+  try {
+    dispatch({
+      type: Order_Actions.ORDER_LIST_MY_REQUEST
+    });
+    const {
+      userLogin: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo?.token}`
+      }
+    };
+
+    const { data } = await axios.get<any, AxiosResponse<typeof orderPayload[]>>(
+      `/api/orders/myorders`,
+      config
+    );
+    dispatch({
+      type: Order_Actions.ORDER_LIST_MY_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: Order_Actions.ORDER_LIST_MY_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -18,6 +18,7 @@ app.use(express_1.default.json());
 app.use('/api/products', productRoutes_1.default);
 app.use('/api/user', userRoutes_1.default);
 app.use('/api/orders', orderRoutes_1.default);
+app.get('/api/config/paypal', (req, res) => res.send(process.env.PAYPAL_CLIENT_ID));
 app.use(errorMiddleware_1.notFound);
 app.use(errorMiddleware_1.errorHandler);
 const PORT = process.env.PORT || 5000;
