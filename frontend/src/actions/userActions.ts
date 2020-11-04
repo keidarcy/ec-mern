@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import {
   UserDetailsActionTypes,
+  UserListActionTypes,
   UserLoginActionTypes,
   UserPayload,
   UserRegisterActionTypes,
@@ -172,6 +173,44 @@ export const updateUserDetails = (user: UserUpdateProfilePayload) => async (
   } catch (error) {
     dispatch({
       type: USER_ACTIONS.USER_UPDATE_PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
+export const listUsers = () => async (
+  dispatch: Dispatch<UserListActionTypes>,
+  getState: typeof store.getState
+) => {
+  try {
+    dispatch({
+      type: USER_ACTIONS.USER_LIST_REQUEST
+    });
+    const {
+      userLogin: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo?.token}`
+      }
+    };
+
+    const { data } = await axios.get<any, AxiosResponse<UserPayload[]>>(
+      `/api/user`,
+      config
+    );
+    dispatch({
+      type: USER_ACTIONS.USER_LIST_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ACTIONS.USER_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

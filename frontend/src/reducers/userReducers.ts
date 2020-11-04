@@ -111,3 +111,29 @@ export const userUpdateProfileReducer = (
       return state;
   }
 };
+
+export type UserListActionTypes =
+  | { type: USER_ACTIONS.USER_LIST_REQUEST }
+  | { type: USER_ACTIONS.USER_LIST_SUCCESS; payload: UserPayload[] }
+  | { type: USER_ACTIONS.USER_LIST_FAIL; payload: Error };
+
+export type UserListState = { users: UserPayload[] } & {
+  loading?: boolean;
+  error?: Error;
+};
+
+export const userListReducer = (
+  state: UserListState = { users: [] },
+  action: UserListActionTypes
+): UserListState => {
+  switch (action.type) {
+    case USER_ACTIONS.USER_LIST_REQUEST:
+      return { ...state, loading: true };
+    case USER_ACTIONS.USER_LIST_SUCCESS:
+      return { ...state, loading: false, users: action.payload };
+    case USER_ACTIONS.USER_LIST_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};

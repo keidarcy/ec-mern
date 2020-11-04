@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.protect = void 0;
+exports.admin = exports.protect = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
@@ -41,4 +41,14 @@ const protect = express_async_handler_1.default((req, res, next) => __awaiter(vo
     }
 }));
 exports.protect = protect;
+const admin = (req, res, next) => {
+    if (req.user && req.user.isAdmin) {
+        next();
+    }
+    else {
+        res.status(401);
+        throw new Error('Not authorized as an admin');
+    }
+};
+exports.admin = admin;
 //# sourceMappingURL=authMiddleware.js.map

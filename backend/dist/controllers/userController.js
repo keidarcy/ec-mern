@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserProfile = exports.registerUser = exports.getUserProfile = exports.authUser = void 0;
+exports.getUsers = exports.updateUserProfile = exports.registerUser = exports.getUserProfile = exports.authUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const generateToken_1 = require("../utils/generateToken");
@@ -102,4 +102,9 @@ const registerUser = express_async_handler_1.default((req, res) => __awaiter(voi
     }
 }));
 exports.registerUser = registerUser;
+const getUsers = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield userModel_1.default.find({});
+    res.json(users);
+}));
+exports.getUsers = getUsers;
 //# sourceMappingURL=userController.js.map
