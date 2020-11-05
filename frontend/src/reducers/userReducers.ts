@@ -115,9 +115,10 @@ export const userUpdateProfileReducer = (
 export type UserListActionTypes =
   | { type: USER_ACTIONS.USER_LIST_REQUEST }
   | { type: USER_ACTIONS.USER_LIST_SUCCESS; payload: UserPayload[] }
-  | { type: USER_ACTIONS.USER_LIST_FAIL; payload: Error };
+  | { type: USER_ACTIONS.USER_LIST_FAIL; payload: Error }
+  | { type: USER_ACTIONS.USER_LIST_RESET };
 
-export type UserListState = { users: UserPayload[] } & {
+export type UserListState = { users?: UserPayload[] } & {
   loading?: boolean;
   error?: Error;
 };
@@ -133,6 +134,69 @@ export const userListReducer = (
       return { ...state, loading: false, users: action.payload };
     case USER_ACTIONS.USER_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
+    case USER_ACTIONS.USER_LIST_RESET:
+      return { users: [] };
+    default:
+      return state;
+  }
+};
+
+export type UserDeleteActionTypes =
+  | { type: USER_ACTIONS.USER_DELETE_REQUEST }
+  | { type: USER_ACTIONS.USER_DELETE_SUCCESS }
+  | { type: USER_ACTIONS.USER_DELETE_FAIL; payload: Error };
+
+export interface BasicState {
+  loading?: boolean;
+  success?: boolean;
+  error?: Error;
+}
+
+export const userDeleteReducer = (
+  state: BasicState = { success: false },
+  action: UserDeleteActionTypes
+): BasicState => {
+  switch (action.type) {
+    case USER_ACTIONS.USER_DELETE_REQUEST:
+      return { loading: true };
+    case USER_ACTIONS.USER_DELETE_SUCCESS:
+      return { loading: false };
+    case USER_ACTIONS.USER_DELETE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export interface UserUpdatePayload {
+  _id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+}
+export type UserUpdateActionTypes =
+  | { type: USER_ACTIONS.USER_UPDATE_REQUEST }
+  | { type: USER_ACTIONS.USER_UPDATE_SUCCESS; payload: UserUpdatePayload }
+  | { type: USER_ACTIONS.USER_UPDATE_FAIL; payload: Error }
+  | { type: USER_ACTIONS.USER_UPDATE_RESET };
+
+export interface UpdateType extends BasicState {
+  user?: UserUpdatePayload;
+}
+
+export const userUpdateReducer = (
+  state: UpdateType = {},
+  action: UserUpdateActionTypes
+): UpdateType => {
+  switch (action.type) {
+    case USER_ACTIONS.USER_UPDATE_REQUEST:
+      return { ...state, loading: true };
+    case USER_ACTIONS.USER_UPDATE_SUCCESS:
+      return { ...state, loading: false, success: true, user: action.payload };
+    case USER_ACTIONS.USER_UPDATE_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case USER_ACTIONS.USER_UPDATE_RESET:
+      return {};
     default:
       return state;
   }

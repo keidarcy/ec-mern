@@ -1,25 +1,34 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStore } from '../store';
 import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
-import { listUsers } from '../actions/userActions';
+import { listUsers, deleteUser } from '../actions/userActions';
 import { LinkContainer } from 'react-router-bootstrap';
+import { useHistory } from 'react-router-dom';
 
 interface UserListScreenProps {}
 
 export const UserListScreen: React.FC<UserListScreenProps> = ({}) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { loading, error, users } = useSelector((state: RootStore) => state.userList);
+  const { userInfo } = useSelector((state: RootStore) => state.userLogin);
+  const { loading: deleteLoading } = useSelector((state: RootStore) => state.userDelete);
 
   useEffect(() => {
-    dispatch(listUsers());
-  }, [dispatch]);
+    if (userInfo && userInfo.isAdmin) {
+      dispatch(listUsers());
+    } else {
+      history.push('/login');
+    }
+  }, [dispatch, history, deleteLoading]);
 
   const handleDelete = (id: string) => {
-    console.log(id);
+    if (window.confirm('SURE ?')) dispatch(deleteUser(id));
   };
+
   return (
     <>
       <h1>Users</h1>
@@ -39,7 +48,7 @@ export const UserListScreen: React.FC<UserListScreenProps> = ({}) => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
+            {users?.map((user) => (
               <tr key={user._id}>
                 <td>{user._id}</td>
                 <td>{user.name}</td>
@@ -54,7 +63,7 @@ export const UserListScreen: React.FC<UserListScreenProps> = ({}) => {
                   )}
                 </td>
                 <td>
-                  <LinkContainer to={`/user/${user._id}/edit`}>
+                  <LinkContainer to={`/admin/user/${user._id}/edit`}>
                     <Button variant="light" className="btn-sm">
                       <i className="fas fa-edit"></i>
                     </Button>

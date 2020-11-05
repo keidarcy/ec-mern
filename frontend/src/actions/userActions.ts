@@ -1,10 +1,13 @@
 import { Dispatch } from 'redux';
 import {
+  UserDeleteActionTypes,
   UserDetailsActionTypes,
   UserListActionTypes,
   UserLoginActionTypes,
   UserPayload,
   UserRegisterActionTypes,
+  UserUpdateActionTypes,
+  UserUpdatePayload,
   UserUpdateProfileActionTypes
 } from '../reducers/userReducers';
 import { Order_Actions, USER_ACTIONS } from '../types';
@@ -51,12 +54,15 @@ export const login = (email: string, password: string) => async (
 };
 
 export const logout = () => (
-  dispatch: Dispatch<UserLoginActionTypes | UserDetailsActionTypes | OrderActionTypes>
+  dispatch: Dispatch<
+    UserLoginActionTypes | UserListActionTypes | UserDetailsActionTypes | OrderActionTypes
+  >
 ) => {
   localStorage.removeItem('userInfo');
   dispatch({ type: USER_ACTIONS.USER_LOGOUT });
   dispatch({ type: USER_ACTIONS.USER_DETAILS_RESET });
   dispatch({ type: Order_Actions.ORDER_LIST_MY_RESET });
+  dispatch({ type: USER_ACTIONS.USER_LIST_RESET });
 };
 
 export const register = (name: string, email: string, password: string) => async (
@@ -211,6 +217,76 @@ export const listUsers = () => async (
   } catch (error) {
     dispatch({
       type: USER_ACTIONS.USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
+export const deleteUser = (id: string) => async (
+  dispatch: Dispatch<UserDeleteActionTypes>,
+  getState: typeof store.getState
+) => {
+  try {
+    dispatch({
+      type: USER_ACTIONS.USER_DELETE_REQUEST
+    });
+    const {
+      userLogin: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo?.token}`
+      }
+    };
+
+    await axios.delete<any, AxiosResponse>(`/api/user/${id}`, config);
+    dispatch({
+      type: USER_ACTIONS.USER_DELETE_SUCCESS
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ACTIONS.USER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
+export const updateUser = (user: UserUpdatePayload) => async (
+  dispatch: Dispatch<UserUpdateActionTypes>,
+  getState: typeof store.getState
+) => {
+  try {
+    dispatch({
+      type: USER_ACTIONS.USER_UPDATE_REQUEST
+    });
+    const {
+      userLogin: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo?.token}`
+      }
+    };
+
+    const { data } = await axios.put<any, AxiosResponse<UserUpdatePayload>>(
+      `/api/user/${user?._id}`,
+      user,
+      config
+    );
+    dispatch({ type: USER_ACTIONS.USER_UPDATE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_ACTIONS.USER_UPDATE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

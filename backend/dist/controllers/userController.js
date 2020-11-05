@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUsers = exports.updateUserProfile = exports.registerUser = exports.getUserProfile = exports.authUser = void 0;
+exports.updateUserById = exports.getUserById = exports.deleteUser = exports.getUsers = exports.updateUserProfile = exports.registerUser = exports.getUserProfile = exports.authUser = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const userModel_1 = __importDefault(require("../models/userModel"));
 const generateToken_1 = require("../utils/generateToken");
@@ -104,7 +104,56 @@ const registerUser = express_async_handler_1.default((req, res) => __awaiter(voi
 exports.registerUser = registerUser;
 const getUsers = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield userModel_1.default.find({});
-    res.json(users);
+    if (users) {
+        res.json(users);
+    }
+    else {
+        res.status(400);
+        throw new Error('User not Found');
+    }
 }));
 exports.getUsers = getUsers;
+const getUserById = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findById(req.params.id).select('-password');
+    if (user) {
+        res.json(user);
+    }
+    else {
+        res.status(400);
+        throw new Error('User not Found');
+    }
+}));
+exports.getUserById = getUserById;
+const deleteUser = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findById(req.params.id);
+    if (user) {
+        yield (user === null || user === void 0 ? void 0 : user.remove());
+        res.json({ message: 'User removed' });
+    }
+    else {
+        res.status(404);
+        throw new Error('User not Found');
+    }
+}));
+exports.deleteUser = deleteUser;
+const updateUserById = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findById(req.params.id);
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.isAdmin = req.body.isAdmin;
+        const updatedUser = yield user.save();
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin
+        });
+    }
+    else {
+        res.status(404);
+        throw new Error('USER not found');
+    }
+}));
+exports.updateUserById = updateUserById;
 //# sourceMappingURL=userController.js.map

@@ -12,5 +12,10 @@ router.route('/login').post(userController_1.authUser);
 router.route('/profile').get(authMiddleware_1.protect, userController_1.getUserProfile);
 router.route('/profile').put(authMiddleware_1.protect, userController_1.updateUserProfile);
 router.route('/register').post(userController_1.registerUser);
+router
+    .route('/:id')
+    .delete(authMiddleware_1.protect, userController_1.deleteUser)
+    .get(authMiddleware_1.protect, userController_1.getUserById)
+    .put(authMiddleware_1.protect, userController_1.updateUserById);
 exports.default = router;
 //# sourceMappingURL=userRoutes.js.map
