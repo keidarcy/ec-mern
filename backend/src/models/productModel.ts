@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
 const reviewSchema = new Schema(
   {
@@ -74,6 +74,16 @@ const ProductSchema: Schema = new Schema(
   }
 );
 
-const Product = mongoose.model('Product', ProductSchema);
+export interface IProduct extends Document {
+  name: string;
+  price: string;
+  description: string;
+  image: string;
+  brand: string;
+  category: string;
+  countInStock: string;
+}
+
+const Product = mongoose.model<IProduct>('Product', ProductSchema);
 
 export default Product;

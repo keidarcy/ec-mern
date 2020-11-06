@@ -81,3 +81,64 @@ export const productDetailsReducer = (
       return state;
   }
 };
+
+export type ProductDeleteActionTypes =
+  | { type: PRODUCT_ACTIONS.PRODUCT_DELETE_REQUEST }
+  | { type: PRODUCT_ACTIONS.PRODUCT_DELETE_SUCCESS }
+  | { type: PRODUCT_ACTIONS.PRODUCT_DELETE_FAIL; payload: Error };
+
+export interface BasicState {
+  loading?: boolean;
+  success?: boolean;
+  error?: Error;
+}
+
+export const productDeleteReducer = (
+  state: BasicState = {},
+  action: ProductDeleteActionTypes
+): BasicState => {
+  switch (action.type) {
+    case PRODUCT_ACTIONS.PRODUCT_DELETE_REQUEST:
+      return { loading: true };
+    case PRODUCT_ACTIONS.PRODUCT_DELETE_SUCCESS:
+      return { loading: false, success: true };
+    case PRODUCT_ACTIONS.PRODUCT_DELETE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export type ProductCreateActionTypes =
+  | { type: PRODUCT_ACTIONS.PRODUCT_CREATE_REQUEST }
+  | { type: PRODUCT_ACTIONS.PRODUCT_CREATE_SUCCESS; payload: ProductType }
+  | { type: PRODUCT_ACTIONS.PRODUCT_CREATE_FAIL; payload: Error }
+  | { type: PRODUCT_ACTIONS.PRODUCT_CREATE_RESET };
+
+export interface BasicState {
+  loading?: boolean;
+  success?: boolean;
+  error?: Error;
+}
+
+export interface ProductCreateState extends BasicState {
+  product?: ProductType;
+}
+
+export const productCreateReducer = (
+  state: ProductCreateState = {},
+  action: ProductCreateActionTypes
+): ProductCreateState => {
+  switch (action.type) {
+    case PRODUCT_ACTIONS.PRODUCT_CREATE_REQUEST:
+      return { loading: true };
+    case PRODUCT_ACTIONS.PRODUCT_CREATE_SUCCESS:
+      return { loading: false, success: true, product: action.payload };
+    case PRODUCT_ACTIONS.PRODUCT_CREATE_FAIL:
+      return { loading: false, error: action.payload };
+    case PRODUCT_ACTIONS.PRODUCT_CREATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
