@@ -16,6 +16,8 @@ exports.createProductReview = exports.createProduct = exports.updateProduct = ex
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const productModel_1 = __importDefault(require("../models/productModel"));
 const getProducts = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const pageSize = 2;
+    const page = req.query.pageNumber ? Number(req.query.pageNumber) : 1;
     const keyword = req.query.keyword
         ? {
             name: {
@@ -24,8 +26,11 @@ const getProducts = express_async_handler_1.default((req, res) => __awaiter(void
             }
         }
         : {};
-    const products = yield productModel_1.default.find(Object.assign({}, keyword));
-    res.json(products);
+    const count = yield productModel_1.default.countDocuments(Object.assign({}, keyword));
+    const products = yield productModel_1.default.find(Object.assign({}, keyword))
+        .limit(pageSize)
+        .skip(pageSize * (page - 1));
+    res.json({ products, page, pages: Math.ceil(count / pageSize) });
 }));
 exports.getProducts = getProducts;
 const getProductById = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -1,9 +1,13 @@
 import { ProductType } from '../components/Product';
 import { PRODUCT_ACTIONS } from '../types';
 
+export type ProductListPayloadState = { products: ProductType[] } & {
+  page: number;
+  pages: number;
+};
 export type ProductActionTypes =
   | { type: PRODUCT_ACTIONS.PRODUCT_LIST_REQUEST }
-  | { type: PRODUCT_ACTIONS.PRODUCT_LIST_SUCCESS; payload: ProductType[] }
+  | { type: PRODUCT_ACTIONS.PRODUCT_LIST_SUCCESS; payload: ProductListPayloadState }
   | { type: PRODUCT_ACTIONS.PRODUCT_LIST_FAIL; payload: Error };
 
 export type ProductDetailsActionTypes =
@@ -13,13 +17,21 @@ export type ProductDetailsActionTypes =
 
 export interface ProductListStateType {
   loading: boolean;
-  products: ProductType[];
   error?: Error;
+  products?: {
+    page: number;
+    pages: number;
+    products?: ProductType[];
+  };
 }
 
-const productListInitialState = {
+const productListInitialState: ProductListStateType = {
   loading: false,
-  products: []
+  products: {
+    page: 1,
+    pages: 1,
+    products: []
+  }
 };
 
 export const productListReducer = (
@@ -28,9 +40,13 @@ export const productListReducer = (
 ): ProductListStateType => {
   switch (action.type) {
     case PRODUCT_ACTIONS.PRODUCT_LIST_REQUEST:
-      return { loading: true, products: [] };
+      return { loading: true };
     case PRODUCT_ACTIONS.PRODUCT_LIST_SUCCESS:
-      return { loading: false, products: action.payload };
+      console.log(action.payload);
+      return {
+        loading: false,
+        products: action.payload
+      };
     case PRODUCT_ACTIONS.PRODUCT_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
     default:

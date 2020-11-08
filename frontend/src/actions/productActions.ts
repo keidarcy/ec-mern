@@ -7,6 +7,7 @@ import {
   ProductCreateReviewActionTypes,
   ProductDeleteActionTypes,
   ProductDetailsActionTypes,
+  ProductListPayloadState,
   ProductUpdateActionTypes,
   ProductUpdateState,
   ProductUpdateType,
@@ -15,12 +16,15 @@ import {
 import { ProductType } from '../components/Product';
 import store from '../store';
 
-export const listProducts = (keyword: string = '') => async (
-  dispatch: Dispatch<ProductActionTypes>
-) => {
+export const listProducts = (
+  keyword: string = '',
+  pageNumnber: string | null = '1'
+) => async (dispatch: Dispatch<ProductActionTypes>) => {
   try {
     dispatch({ type: PRODUCT_ACTIONS.PRODUCT_LIST_REQUEST });
-    const { data } = await axios.get<ProductType[]>(`/api/products?keyword=${keyword}`);
+    const { data } = await axios.get<ProductListPayloadState>(
+      `/api/products?keyword=${keyword}&pageNumber=${pageNumnber}`
+    );
 
     dispatch({
       type: PRODUCT_ACTIONS.PRODUCT_LIST_SUCCESS,
