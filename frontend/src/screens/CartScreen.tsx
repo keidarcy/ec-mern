@@ -23,7 +23,6 @@ export const CartScreen: React.FC<CartScreenProps> = ({ match }) => {
   const qty = location.search ? +location.search.replace(/\?qty=/, '') : 1;
 
   const { cartItems } = useSelector((state: RootStore) => state.cart);
-  console.log(cartItems);
 
   useEffect(() => {
     if (productId) {

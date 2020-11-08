@@ -39,7 +39,11 @@ export const productListReducer = (
 };
 
 export interface ReviewType {
+  _id?: string;
+  rating: number;
   comment: string;
+  name?: string;
+  createdAt?: string;
 }
 
 export const ProductInitialState = {
@@ -62,7 +66,9 @@ export const productDetailsInitialState = {
 
 export interface ProductDetailsStateType {
   loading: boolean;
-  product: ProductType;
+  product: ProductType & {
+    reviews?: ReviewType[];
+  };
   error?: Error;
 }
 
@@ -137,6 +143,67 @@ export const productCreateReducer = (
     case PRODUCT_ACTIONS.PRODUCT_CREATE_FAIL:
       return { loading: false, error: action.payload };
     case PRODUCT_ACTIONS.PRODUCT_CREATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export interface ProductUpdateType {
+  _id?: string;
+  name?: string;
+  price?: number;
+  brand?: string;
+  image?: string;
+  category?: string;
+  description?: string;
+  countInStock?: number;
+}
+export interface ProductUpdateState extends BasicState {
+  product?: ProductUpdateType;
+}
+export type ProductUpdateActionTypes =
+  | { type: PRODUCT_ACTIONS.PRODUCT_UPDATE_REQUEST }
+  | { type: PRODUCT_ACTIONS.PRODUCT_UPDATE_SUCCESS; payload: ProductUpdateType }
+  | { type: PRODUCT_ACTIONS.PRODUCT_UPDATE_FAIL; payload: Error }
+  | { type: PRODUCT_ACTIONS.PRODUCT_UPDATE_RESET };
+
+export const productUpdateReducer = (
+  state: ProductUpdateState = {},
+  action: ProductUpdateActionTypes
+): ProductUpdateState => {
+  switch (action.type) {
+    case PRODUCT_ACTIONS.PRODUCT_UPDATE_REQUEST:
+      return { loading: true };
+    case PRODUCT_ACTIONS.PRODUCT_UPDATE_SUCCESS:
+      return { loading: false, success: true, product: action.payload };
+    case PRODUCT_ACTIONS.PRODUCT_UPDATE_FAIL:
+      return { loading: false, error: action.payload };
+    case PRODUCT_ACTIONS.PRODUCT_UPDATE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export type ProductCreateReviewActionTypes =
+  | { type: PRODUCT_ACTIONS.PRODUCT_CREATE_REVIEW_REQUEST }
+  | { type: PRODUCT_ACTIONS.PRODUCT_CREATE_REVIEW_SUCCESS }
+  | { type: PRODUCT_ACTIONS.PRODUCT_CREATE_REVIEW_FAIL; payload: Error }
+  | { type: PRODUCT_ACTIONS.PRODUCT_CREATE_REVIEW_RESET };
+
+export const productReviewCreateReducer = (
+  state: BasicState = {},
+  action: ProductCreateReviewActionTypes
+): BasicState => {
+  switch (action.type) {
+    case PRODUCT_ACTIONS.PRODUCT_CREATE_REVIEW_REQUEST:
+      return { loading: true };
+    case PRODUCT_ACTIONS.PRODUCT_CREATE_REVIEW_SUCCESS:
+      return { loading: false, success: true };
+    case PRODUCT_ACTIONS.PRODUCT_CREATE_REVIEW_FAIL:
+      return { loading: false, error: action.payload };
+    case PRODUCT_ACTIONS.PRODUCT_CREATE_REVIEW_RESET:
       return {};
     default:
       return state;

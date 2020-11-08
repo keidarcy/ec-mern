@@ -13,6 +13,11 @@ const reviewSchema = new Schema(
     comment: {
       type: String,
       required: true
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
     }
   },
   {
@@ -82,6 +87,14 @@ export interface IProduct extends Document {
   brand: string;
   category: string;
   countInStock: string;
+  numReviews?: number;
+  rating?: number;
+  reviews: [
+    {
+      user: {};
+      rating: number;
+    }
+  ];
 }
 
 const Product = mongoose.model<IProduct>('Product', ProductSchema);

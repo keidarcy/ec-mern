@@ -157,3 +157,80 @@ export const listMyOrders = () => async (
     });
   }
 };
+
+export const listOrders = () => async (
+  dispatch: Dispatch<OrderActionTypes>,
+  getState: typeof store.getState
+) => {
+  try {
+    dispatch({
+      type: Order_Actions.ORDER_LIST_REQUEST
+    });
+    const {
+      userLogin: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo?.token}`
+      }
+    };
+
+    const { data } = await axios.get<any, AxiosResponse<typeof orderPayload[]>>(
+      `/api/orders`,
+      config
+    );
+
+    dispatch({
+      type: Order_Actions.ORDER_LIST_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: Order_Actions.ORDER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
+export const deliverOrder = (orderId: string) => async (
+  dispatch: Dispatch<OrderActionTypes>,
+  getState: typeof store.getState
+) => {
+  try {
+    dispatch({
+      type: Order_Actions.ORDER_DELIVER_REQUEST
+    });
+    const {
+      userLogin: { userInfo }
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo?.token}`
+      }
+    };
+
+    const { data } = await axios.put<any, AxiosResponse>(
+      `/api/orders/${orderId}/deliver`,
+      {},
+      config
+    );
+    dispatch({
+      type: Order_Actions.ORDER_DELIVER_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: Order_Actions.ORDER_DELIVER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};

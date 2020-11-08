@@ -30,8 +30,8 @@ export interface OrderInitialType {
     };
     isPaid?: boolean;
     paidAt?: string;
-    isDeliveried?: boolean;
-    deliveriedAt?: string;
+    isDelivered?: boolean;
+    deliveredAt?: string;
   };
   error?: Error;
   success?: boolean;
@@ -51,7 +51,14 @@ export type OrderActionTypes =
   | { type: Order_Actions.ORDER_LIST_MY_REQUEST }
   | { type: Order_Actions.ORDER_LIST_MY_RESET }
   | { type: Order_Actions.ORDER_LIST_MY_SUCCESS; payload: typeof orderPayload[] }
-  | { type: Order_Actions.ORDER_LIST_MY_FAIL; payload: Error };
+  | { type: Order_Actions.ORDER_LIST_MY_FAIL; payload: Error }
+  | { type: Order_Actions.ORDER_LIST_REQUEST }
+  | { type: Order_Actions.ORDER_LIST_SUCCESS; payload: typeof orderPayload[] }
+  | { type: Order_Actions.ORDER_LIST_FAIL; payload: Error }
+  | { type: Order_Actions.ORDER_DELIVER_REQUEST }
+  | { type: Order_Actions.ORDER_DELIVER_RESET }
+  | { type: Order_Actions.ORDER_DELIVER_SUCCESS; payload: Error }
+  | { type: Order_Actions.ORDER_DELIVER_FAIL; payload: Error };
 
 export const orderCreateReducer = (
   state: OrderInitialType = { order: orderPayload },
@@ -116,6 +123,10 @@ type OrdersMyType = typeof orderPayload & {
   paidAt?: string;
   isDelivered?: boolean;
   deliveredAt?: string;
+  user?: {
+    _id?: string;
+    name?: string;
+  };
 };
 
 type OrdersType = OrderPayType & { orders?: OrdersMyType[] };
@@ -133,6 +144,40 @@ export const orderListMyReducer = (
       return { ...state, loading: false, error: action.payload };
     case Order_Actions.ORDER_LIST_MY_RESET:
       return { orders: [] };
+    default:
+      return state;
+  }
+};
+
+export const orderListReducer = (
+  state: OrdersType = { orders: [orderPayload] },
+  action: OrderActionTypes
+): OrdersType => {
+  switch (action.type) {
+    case Order_Actions.ORDER_LIST_REQUEST:
+      return { ...state, loading: true };
+    case Order_Actions.ORDER_LIST_SUCCESS:
+      return { ...state, loading: false, orders: action.payload };
+    case Order_Actions.ORDER_LIST_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const orderDeliverReducer = (
+  state: OrderPayType = { loading: false },
+  action: OrderActionTypes
+): OrderPayType => {
+  switch (action.type) {
+    case Order_Actions.ORDER_DELIVER_REQUEST:
+      return { ...state, loading: true };
+    case Order_Actions.ORDER_DELIVER_SUCCESS:
+      return { ...state, loading: false, success: true };
+    case Order_Actions.ORDER_DELIVER_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case Order_Actions.ORDER_DELIVER_RESET:
+      return state;
     default:
       return state;
   }

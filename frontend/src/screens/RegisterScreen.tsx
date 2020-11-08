@@ -7,10 +7,10 @@ import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
 import { register } from '../actions/userActions';
 import { FormContainer } from '../components/FormContainer';
-import { initialState, reducer } from './common/helper';
+import { initUserState, localUserReducer } from './common/helper';
 
 export const RegisterScreen: React.FC = ({}) => {
-  const [state, localDispatch] = useReducer(reducer, initialState);
+  const [state, localDispatch] = useReducer(localUserReducer, initUserState);
 
   const location = useLocation();
   const history = useHistory();

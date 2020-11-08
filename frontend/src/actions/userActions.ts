@@ -35,7 +35,6 @@ export const login = (email: string, password: string) => async (
     );
 
     const data = response.data;
-    console.log(response);
     dispatch({
       type: USER_ACTIONS.USER_LOGIN_SUCCESS,
       payload: data

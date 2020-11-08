@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import Product from '../models/productModel';
+import Product, { IProduct } from '../models/productModel';
 
 /**
  * @desc Fetch all products
@@ -8,8 +8,15 @@ import Product from '../models/productModel';
  * @access Public
  */
 const getProducts = asyncHandler(async (req: Request, res: Response) => {
-  console.log(req.body);
-  const products = await Product.find({});
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: 'i'
+        }
+      }
+    : {};
+  const products = await Product.find({ ...keyword });
   res.json(products);
 });
 
@@ -88,4 +95,48 @@ const updateProduct = asyncHandler(async (req: Request, res: Response) => {
   res.status(201).json(updatedProduct);
 });
 
-export { getProducts, getProductById, deleteProduct, updateProduct, createProduct };
+/**
+ * @desc Create new reivew
+ * @route POST /api/products/:id/reviews
+ * @access Private
+ */
+const createProductReview = asyncHandler(async (req: Request, res: Response) => {
+  const { rating, comment } = req.body;
+  const product = (await Product.findById(req.params.id)) as IProduct;
+
+  if (product) {
+    const alreadyReviewed = product.reviews?.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (alreadyReviewed) {
+      res.status(404);
+      throw new Error('Product already reviewd');
+    }
+  }
+  const review = {
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+    user: req.user._id
+  };
+  product?.reviews?.push(review);
+
+  product.numReviews = product?.reviews?.length;
+
+  product.rating =
+    product?.reviews?.reduce((acc, item) => item.rating + acc, 0) /
+    product?.reviews?.length;
+
+  await product?.save();
+  res.status(201).json({ message: 'Review added' });
+});
+
+export {
+  getProducts,
+  getProductById,
+  deleteProduct,
+  updateProduct,
+  createProduct,
+  createProductReview
+};

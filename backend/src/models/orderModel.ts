@@ -1,5 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
-
+import mongoose, { Schema, Document } from 'mongoose';
 const OrderSchema: Schema = new Schema(
   {
     user: {
@@ -58,6 +57,19 @@ const OrderSchema: Schema = new Schema(
   }
 );
 
-const Order = mongoose.model('Order', OrderSchema);
+export interface IOrder extends Document {
+  totalPrice: number;
+  isPaid: boolean;
+  paidAt: string | number;
+  isDelivered: boolean;
+  deliveredAt: string | number;
+  paymentResult: {
+    id: string;
+    state: string;
+    update_time: string;
+    email_address: string;
+  };
+}
+const Order = mongoose.model<IOrder>('Order', OrderSchema);
 
 export default Order;

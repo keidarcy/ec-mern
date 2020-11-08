@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateOrderToPaid = exports.getOrderById = exports.getMyOrders = exports.addOrderItems = void 0;
+exports.updateOrderToDelivered = exports.getOrders = exports.updateOrderToPaid = exports.getOrderById = exports.getMyOrders = exports.addOrderItems = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const orderModel_1 = __importDefault(require("../models/orderModel"));
 const addOrderItems = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -68,9 +68,28 @@ const updateOrderToPaid = express_async_handler_1.default((req, res) => __awaite
     }
 }));
 exports.updateOrderToPaid = updateOrderToPaid;
+const updateOrderToDelivered = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const order = yield orderModel_1.default.findById(req.params.id);
+    if (order) {
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+        const updateOrder = yield order.save();
+        res.json(updateOrder);
+    }
+    else {
+        res.status(404);
+        throw new Error('Order not Found');
+    }
+}));
+exports.updateOrderToDelivered = updateOrderToDelivered;
 const getMyOrders = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const orders = yield orderModel_1.default.find({ user: req.user._id });
     res.json(orders);
 }));
 exports.getMyOrders = getMyOrders;
+const getOrders = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const orders = yield orderModel_1.default.find({}).populate('user', 'id name');
+    res.json(orders);
+}));
+exports.getOrders = getOrders;
 //# sourceMappingURL=orderController.js.map

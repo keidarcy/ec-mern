@@ -6,17 +6,20 @@ import { listProducts } from '../actions/productActions';
 import { RootStore } from '../store';
 import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
+import { useParams, useRouteMatch } from 'react-router-dom';
 
 export const HomeScreen: React.FC = () => {
   const dispatch = useDispatch();
+
+  const { keyword } = useParams<{ keyword: string }>();
 
   const { error, loading, products } = useSelector(
     (state: RootStore) => state.productList
   );
 
   useEffect(() => {
-    dispatch(listProducts());
-  }, [dispatch]);
+    dispatch(listProducts(keyword));
+  }, [dispatch, keyword]);
 
   return (
     <>

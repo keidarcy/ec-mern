@@ -7,11 +7,11 @@ import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
 import { getUserDetails, updateUser } from '../actions/userActions';
 import { FormContainer } from '../components/FormContainer';
-import { initialState, reducer } from './common/helper';
+import { initUserState, localUserReducer } from './common/helper';
 import { USER_ACTIONS } from '../types';
 
 export const UserEditScreen: React.FC = ({}) => {
-  const [state, localDispatch] = useReducer(reducer, initialState);
+  const [state, localDispatch] = useReducer(localUserReducer, initUserState);
 
   const dispatch = useDispatch();
   const history = useHistory();

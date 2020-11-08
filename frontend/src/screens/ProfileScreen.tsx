@@ -6,12 +6,12 @@ import { RootStore } from '../store';
 import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
 import { getUserDetails, updateUserDetails } from '../actions/userActions';
-import { initialState, reducer } from './common/helper';
+import { initUserState, localUserReducer } from './common/helper';
 import { listMyOrders } from '../actions/orderActions';
 import { LinkContainer } from 'react-router-bootstrap';
 
 export const ProfileScreen: React.FC = ({}) => {
-  const [state, localDispatch] = useReducer(reducer, initialState);
+  const [state, localDispatch] = useReducer(localUserReducer, initUserState);
   const history = useHistory();
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state: RootStore) => state.userDetails);
@@ -121,8 +121,8 @@ export const ProfileScreen: React.FC = ({}) => {
               </tr>
             </thead>
             <tbody>
-              {orders?.map((order) => (
-                <tr key={order?._id}>
+              {orders?.map((order, index) => (
+                <tr key={`${order?._id}-${index}`}>
                   <td>{order._id}</td>
                   <td>{order?.createdAt?.substring(0, 10)}</td>
                   <td>{order.totalPrice}</td>

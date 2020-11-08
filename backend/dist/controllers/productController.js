@@ -12,12 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProduct = exports.updateProduct = exports.deleteProduct = exports.getProductById = exports.getProducts = void 0;
+exports.createProductReview = exports.createProduct = exports.updateProduct = exports.deleteProduct = exports.getProductById = exports.getProducts = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const productModel_1 = __importDefault(require("../models/productModel"));
 const getProducts = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
-    const products = yield productModel_1.default.find({});
+    const keyword = req.query.keyword
+        ? {
+            name: {
+                $regex: req.query.keyword,
+                $options: 'i'
+            }
+        }
+        : {};
+    const products = yield productModel_1.default.find(Object.assign({}, keyword));
     res.json(products);
 }));
 exports.getProducts = getProducts;
@@ -76,4 +83,29 @@ const updateProduct = express_async_handler_1.default((req, res) => __awaiter(vo
     res.status(201).json(updatedProduct);
 }));
 exports.updateProduct = updateProduct;
+const createProductReview = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c, _d, _e;
+    const { rating, comment } = req.body;
+    const product = (yield productModel_1.default.findById(req.params.id));
+    if (product) {
+        const alreadyReviewed = (_a = product.reviews) === null || _a === void 0 ? void 0 : _a.find((r) => r.user.toString() === req.user._id.toString());
+        if (alreadyReviewed) {
+            res.status(404);
+            throw new Error('Product already reviewd');
+        }
+    }
+    const review = {
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.user._id
+    };
+    (_b = product === null || product === void 0 ? void 0 : product.reviews) === null || _b === void 0 ? void 0 : _b.push(review);
+    product.numReviews = (_c = product === null || product === void 0 ? void 0 : product.reviews) === null || _c === void 0 ? void 0 : _c.length;
+    product.rating =
+        ((_d = product === null || product === void 0 ? void 0 : product.reviews) === null || _d === void 0 ? void 0 : _d.reduce((acc, item) => item.rating + acc, 0)) / ((_e = product === null || product === void 0 ? void 0 : product.reviews) === null || _e === void 0 ? void 0 : _e.length);
+    yield (product === null || product === void 0 ? void 0 : product.save());
+    res.status(201).json({ message: 'Review added' });
+}));
+exports.createProductReview = createProductReview;
 //# sourceMappingURL=productController.js.map
