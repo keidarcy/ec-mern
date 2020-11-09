@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { Product } from '../components/Product';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,8 +6,10 @@ import { listProducts } from '../actions/productActions';
 import { RootStore } from '../store';
 import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Paginate } from '../components/Paginate';
+import { ProductCarousel } from '../components/ProductCarousel';
+import { Meta } from '../components/Meta';
 
 export const HomeScreen: React.FC = () => {
   const dispatch = useDispatch();
@@ -26,6 +28,14 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <>
+      <Meta />
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
+        <Link to="/" className="btn btn-light">
+          Go Back
+        </Link>
+      )}
       <h1>YOUR LOVE</h1>
       {loading ? (
         <Loader />

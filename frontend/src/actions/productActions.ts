@@ -8,6 +8,8 @@ import {
   ProductDeleteActionTypes,
   ProductDetailsActionTypes,
   ProductListPayloadState,
+  ProducTopStateType,
+  ProductTopActionTypes,
   ProductUpdateActionTypes,
   ProductUpdateState,
   ProductUpdateType,
@@ -33,6 +35,28 @@ export const listProducts = (
   } catch (error) {
     dispatch({
       type: PRODUCT_ACTIONS.PRODUCT_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message
+    });
+  }
+};
+
+export const listTopProducts = () => async (
+  dispatch: Dispatch<ProductTopActionTypes>
+) => {
+  try {
+    dispatch({ type: PRODUCT_ACTIONS.PRODUCT_TOP_REQUEST });
+    const { data } = await axios.get<ProductType[]>(`/api/products/top`);
+
+    dispatch({
+      type: PRODUCT_ACTIONS.PRODUCT_TOP_SUCCESS,
+      payload: data
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_ACTIONS.PRODUCT_TOP_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

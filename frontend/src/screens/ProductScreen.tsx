@@ -8,6 +8,7 @@ import { listProductDetails, createProductReview } from '../actions/productActio
 import { Loader } from '../components/Loader';
 import { Message } from '../components/Message';
 import { PRODUCT_ACTIONS } from '../types';
+import { Meta } from '../components/Meta';
 
 interface ProductScreenProps {
   match: {
@@ -62,6 +63,7 @@ export const ProductScreen: React.FC<ProductScreenProps> = ({ match }) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
+          <Meta title={product.name} />
           <Row>
             <Col md={6}>
               <Image src={product?.image} alt={product?.name} fluid />

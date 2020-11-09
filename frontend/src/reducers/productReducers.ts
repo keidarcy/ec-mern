@@ -225,3 +225,35 @@ export const productReviewCreateReducer = (
       return state;
   }
 };
+
+export type ProductTopActionTypes =
+  | { type: PRODUCT_ACTIONS.PRODUCT_TOP_REQUEST }
+  | { type: PRODUCT_ACTIONS.PRODUCT_TOP_SUCCESS; payload: ProductType[] }
+  | { type: PRODUCT_ACTIONS.PRODUCT_TOP_FAIL; payload: Error };
+
+export interface ProducTopStateType {
+  loading: boolean;
+  products?: ProductType[];
+  error?: Error;
+}
+
+export const productTopInitialState = {
+  loading: false,
+  products: [ProductInitialState]
+};
+
+export const productTopReducer = (
+  state: ProducTopStateType = { loading: false },
+  action: ProductTopActionTypes
+): ProducTopStateType => {
+  switch (action.type) {
+    case PRODUCT_ACTIONS.PRODUCT_TOP_REQUEST:
+      return { ...state, loading: true };
+    case PRODUCT_ACTIONS.PRODUCT_TOP_SUCCESS:
+      return { loading: false, products: action.payload };
+    case PRODUCT_ACTIONS.PRODUCT_TOP_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProductReview = exports.createProduct = exports.updateProduct = exports.deleteProduct = exports.getProductById = exports.getProducts = void 0;
+exports.getTopProduct = exports.createProductReview = exports.createProduct = exports.updateProduct = exports.deleteProduct = exports.getProductById = exports.getProducts = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const productModel_1 = __importDefault(require("../models/productModel"));
 const getProducts = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -113,4 +113,9 @@ const createProductReview = express_async_handler_1.default((req, res) => __awai
     res.status(201).json({ message: 'Review added' });
 }));
 exports.createProductReview = createProductReview;
+const getTopProduct = express_async_handler_1.default((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const products = yield productModel_1.default.find({}).sort({ rating: -1 }).limit(3);
+    res.json(products);
+}));
+exports.getTopProduct = getTopProduct;
 //# sourceMappingURL=productController.js.map
