@@ -12,7 +12,7 @@
     "dev": "concurrently \"yarn ts\" \"yarn server\" \"yarn client\"",
     "data:import": "node backend/dist/seeder.js",
     "data:destroy": "node backend/dist/seeder.js -d",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install cd backend && tsc -w"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "Xing Yahao",
