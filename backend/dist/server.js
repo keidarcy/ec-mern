@@ -26,6 +26,15 @@ app.use('/api/user', userRoutes_1.default);
 app.use('/api/orders', orderRoutes_1.default);
 app.use('/api/upload', uploadRoutes_1.default);
 app.get('/api/config/paypal', (req, res) => res.send(process.env.PAYPAL_CLIENT_ID));
+if (process.env.NODE_ENV === 'production') {
+    app.use(express_1.default.static(path_1.default.join(path_1.default.resolve(), '/frontend/build')));
+    app.get('*', (req, res) => res.sendFile(path_1.default.resolve(path_1.default.resolve(), 'frontend', 'build', 'index.html')));
+}
+else {
+    app.get('/', (req, res) => {
+        res.send('API is running');
+    });
+}
 app.use('/upload', express_1.default.static(path_1.default.join(path_1.default.resolve(), '/uploads')));
 app.use(errorMiddleware_1.notFound);
 app.use(errorMiddleware_1.errorHandler);
