@@ -30,11 +30,6 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express_1.default.static(path_1.default.join(path_1.default.resolve(), '/frontend/build')));
     app.get('*', (req, res) => res.sendFile(path_1.default.resolve(path_1.default.resolve(), 'frontend', 'build', 'index.html')));
 }
-else {
-    app.get('/', (req, res) => {
-        res.send('API is running');
-    });
-}
 app.use('/upload', express_1.default.static(path_1.default.join(path_1.default.resolve(), '/uploads')));
 app.use(errorMiddleware_1.notFound);
 app.use(errorMiddleware_1.errorHandler);

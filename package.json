@@ -7,9 +7,9 @@
     "start": "node backend/dist/server.js",
     "server": "nodemon backend/dist/server.js",
     "ts": "cd backend && tsc -w",
-    "backend": "concurrently \"yarn ts\" \"yarn server\"",
+    "backend": "concurrently \"npm run ts\" \"npm run server\"",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"yarn ts\" \"yarn server\" \"yarn client\"",
+    "dev": "concurrently \"npm run ts\" \"npm run server\" \"npm run client\"",
     "data:import": "node backend/dist/seeder.js",
     "data:destroy": "node backend/dist/seeder.js -d",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
