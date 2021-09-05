@@ -13,25 +13,25 @@ const UserSchema: Schema = new Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     password: {
       type: String,
-      required: true
+      required: true,
     },
     isAdmin: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
@@ -47,6 +47,6 @@ UserSchema.pre<IUser>('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-const User = mongoose.model<IUser>('User', UserSchema);
+const User = mongoose.model<IUser>('user', UserSchema);
 
 export default User;

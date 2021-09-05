@@ -9,15 +9,15 @@ export const orderPayload = {
       image: '',
       price: 0,
       countInStock: 0,
-      qty: 0
-    }
+      qty: 0,
+    },
   ],
   shippingAddress: shippingInitialState,
   paymentMethod: '',
   itemsPrice: 0,
   taxPrice: 0,
   shippingPrice: 0,
-  totalPrice: 0
+  totalPrice: 0,
 };
 
 export interface OrderInitialType {

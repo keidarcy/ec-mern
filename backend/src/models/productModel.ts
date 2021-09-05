@@ -4,24 +4,24 @@ const reviewSchema = new Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     rating: {
       type: Number,
-      required: true
+      required: true,
     },
     comment: {
       type: String,
-      required: true
+      required: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User'
-    }
+      ref: 'User',
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
@@ -30,52 +30,52 @@ const ProductSchema: Schema = new Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User'
+      ref: 'User',
     },
     name: {
       type: String,
-      required: true
+      required: true,
     },
     image: {
       type: String,
-      required: true
+      required: true,
     },
     brand: {
       type: String,
-      required: true
+      required: true,
     },
     category: {
       type: String,
-      required: true
+      required: true,
     },
     description: {
       type: String,
-      required: true
+      required: true,
     },
     reviews: [reviewSchema],
     rating: {
       type: Number,
       required: true,
-      default: 0
+      default: 0,
     },
     numReviews: {
       type: Number,
       required: true,
-      default: 0
+      default: 0,
     },
     price: {
       type: Number,
       required: true,
-      default: 0
+      default: 0,
     },
     countInStock: {
       type: Number,
       required: true,
-      default: 0
-    }
+      default: 0,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
@@ -97,6 +97,6 @@ export interface IProduct extends Document {
   ];
 }
 
-const Product = mongoose.model<IProduct>('Product', ProductSchema);
+const Product = mongoose.model<IProduct>('product', ProductSchema);
 
 export default Product;
